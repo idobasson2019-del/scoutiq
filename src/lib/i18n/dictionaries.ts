@@ -81,6 +81,8 @@ export const en: Dict = {
   "top.logout": "Sign out",
   "top.viewAll": "View all",
   "top.noNotifications": "No new notifications",
+  "top.install": "Install app",
+  "top.installed": "ScoutIQ was added to your home screen.",
 
   // Common
   "common.all": "All",
@@ -652,6 +654,8 @@ export const he: Dict = {
   "top.logout": "יציאה",
   "top.viewAll": "הצג הכל",
   "top.noNotifications": "אין התראות חדשות",
+  "top.install": "התקן אפליקציה",
+  "top.installed": "ScoutIQ נוספה למסך הבית.",
 
   "common.all": "הכל",
   "common.any": "ללא העדפה",

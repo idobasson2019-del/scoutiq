@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Logo } from "@/components/layout/logo";
 import { LanguageToggle } from "@/components/layout/language-toggle";
+import { InstallAppButton } from "@/components/pwa/install-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,7 +69,8 @@ export default function LoginPage() {
             "radial-gradient(60% 50% at 50% 0%, hsl(172 62% 45% / 0.10), transparent 70%)",
         }}
       />
-      <div className="absolute end-4 top-4">
+      <div className="absolute end-4 top-4 flex items-center gap-2">
+        <InstallAppButton />
         <LanguageToggle />
       </div>
 

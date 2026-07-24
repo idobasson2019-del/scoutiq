@@ -1,0 +1,35 @@
+{
+  "name": "ScoutIQ — מערכת סקאוטינג",
+  "short_name": "ScoutIQ",
+  "description": "מערכת מודיעין וסקאוטינג בכדורגל — שחקנים, צרכי רכש, דוחות וקבוצות.",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": ".",
+  "scope": ".",
+  "id": "scoutiq",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#11151c",
+  "theme_color": "#11151c",
+  "categories": ["sports", "business", "productivity"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

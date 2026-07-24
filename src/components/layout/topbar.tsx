@@ -7,6 +7,7 @@ import { Search, Bell, LogOut, User as UserIcon, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "./language-toggle";
+import { InstallAppButton } from "@/components/pwa/install-button";
 import { Monogram } from "@/components/common/misc";
 import {
   DropdownMenu,
@@ -55,6 +56,7 @@ export function Topbar() {
       </form>
 
       <div className="ms-auto flex items-center gap-2">
+        <InstallAppButton />
         <LanguageToggle />
 
         <DropdownMenu>
