@@ -79,27 +79,30 @@ export function EditStatsDialog({
             ))}
           </div>
 
-          <div>
-            <h3 className="mb-3 text-sm font-semibold text-muted-foreground">
-              {t("stat.rated")}
-            </h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {ratings.map((f) => (
-                <div key={f.key} className="space-y-1.5">
-                  <Label className="text-xs">{t(f.labelKey)}</Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={stats[f.key]}
-                    onChange={(e) =>
-                      set(f.key, Math.max(0, Math.min(100, Number(e.target.value))))
-                    }
-                  />
-                </div>
-              ))}
+          {/* Goalkeepers have no rated stats, so the section is skipped. */}
+          {ratings.length > 0 && (
+            <div>
+              <h3 className="mb-3 text-sm font-semibold text-muted-foreground">
+                {t("stat.rated")}
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {ratings.map((f) => (
+                  <div key={f.key} className="space-y-1.5">
+                    <Label className="text-xs">{t(f.labelKey)}</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={stats[f.key]}
+                      onChange={(e) =>
+                        set(f.key, Math.max(0, Math.min(100, Number(e.target.value))))
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

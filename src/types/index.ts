@@ -97,12 +97,10 @@ export interface PlayerStats {
   passAccuracy: number;
   defensiveRating: number;
   /** Goalkeepers only — see GOALKEEPER_STATS in lib/stats.ts */
-  cleanSheets: number;
-  goalsConceded: number;
   saves: number;
-  penaltiesSaved: number;
-  /** Rated 0–100 */
-  savePct: number;
+  goalsConceded: number;
+  cleanSheets: number;
+  matchesConceded: number;
 }
 
 export interface PlayerVideo {

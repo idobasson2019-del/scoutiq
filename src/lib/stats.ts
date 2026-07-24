@@ -13,11 +13,10 @@ export const EMPTY_STATS: PlayerStats = {
   redCards: 0,
   passAccuracy: 0,
   defensiveRating: 0,
-  cleanSheets: 0,
-  goalsConceded: 0,
   saves: 0,
-  penaltiesSaved: 0,
-  savePct: 0,
+  goalsConceded: 0,
+  cleanSheets: 0,
+  matchesConceded: 0,
 };
 
 export function withStatDefaults(stats?: Partial<PlayerStats>): PlayerStats {
@@ -46,18 +45,14 @@ export const OUTFIELD_STATS: StatField[] = [
   { key: "defensiveRating", labelKey: "stat.defensiveRating", kind: "rating" },
 ];
 
-/** Goalkeepers are judged on clean sheets and saves instead. */
+/** Goalkeepers, exactly as the owner specified — counts only, no ratings. */
 export const GOALKEEPER_STATS: StatField[] = [
-  { key: "appearances", labelKey: "stat.appearances", kind: "count" },
-  { key: "minutes", labelKey: "stat.minutes", kind: "count" },
-  { key: "cleanSheets", labelKey: "stat.cleanSheets", kind: "count" },
-  { key: "goalsConceded", labelKey: "stat.goalsConceded", kind: "count", better: "low" },
   { key: "saves", labelKey: "stat.saves", kind: "count" },
-  { key: "penaltiesSaved", labelKey: "stat.penaltiesSaved", kind: "count" },
+  { key: "goalsConceded", labelKey: "stat.goalsConceded", kind: "count", better: "low" },
+  { key: "cleanSheets", labelKey: "stat.cleanSheets", kind: "count" },
+  { key: "matchesConceded", labelKey: "stat.matchesConceded", kind: "count", better: "low" },
   { key: "yellowCards", labelKey: "stat.yellowCards", kind: "count", accent: "warning", better: "low" },
   { key: "redCards", labelKey: "stat.redCards", kind: "count", accent: "destructive", better: "low" },
-  { key: "savePct", labelKey: "stat.savePct", kind: "rating" },
-  { key: "passAccuracy", labelKey: "stat.passAccuracy", kind: "rating" },
 ];
 
 export function isGoalkeeper(position: string | undefined): boolean {

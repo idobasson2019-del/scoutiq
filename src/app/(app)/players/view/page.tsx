@@ -92,6 +92,8 @@ export default function PlayerProfilePage() {
   const stats = withStatDefaults(player.stats);
   // Goalkeepers get their own set of stats — see lib/stats.ts.
   const statFields = statFieldsFor(player.position);
+  const statCounts = statFields.filter((f) => f.kind === "count");
+  const statRatings = statFields.filter((f) => f.kind === "rating");
 
   const addNote = () => {
     if (!noteText.trim()) return;
@@ -252,19 +254,18 @@ export default function PlayerProfilePage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                {statFields
-                  .filter((f) => f.kind === "count")
-                  .map((f) => (
-                    <Stat key={f.key} label={t(f.labelKey)} value={stats[f.key]} accent={f.accent} />
-                  ))}
+                {statCounts.map((f) => (
+                  <Stat key={f.key} label={t(f.labelKey)} value={stats[f.key]} accent={f.accent} />
+                ))}
               </div>
-              <div className="grid gap-x-8 gap-y-4 border-t border-border pt-5 sm:grid-cols-2">
-                {statFields
-                  .filter((f) => f.kind === "rating")
-                  .map((f) => (
+              {/* Goalkeepers have no rated stats, so the divider stays hidden. */}
+              {statRatings.length > 0 && (
+                <div className="grid gap-x-8 gap-y-4 border-t border-border pt-5 sm:grid-cols-2">
+                  {statRatings.map((f) => (
                     <StatBar key={f.key} label={t(f.labelKey)} value={stats[f.key]} />
                   ))}
-              </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
