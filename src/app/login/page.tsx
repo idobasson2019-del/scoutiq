@@ -124,7 +124,10 @@ export default function LoginPage() {
               </div>
 
               {error && (
-                <p className="text-sm text-destructive">{t("auth.invalid")}</p>
+                <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2">
+                  <p className="text-sm text-destructive">{t("auth.invalid")}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{t("auth.invalidHint")}</p>
+                </div>
               )}
 
               <div className="flex items-center justify-between">

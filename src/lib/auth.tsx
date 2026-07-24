@@ -67,7 +67,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Each user may have their own mock password; otherwise the shared demo
       // password applies. (Placeholder for real hashed auth via Supabase.)
       const expected = found?.password ?? DEMO_PASSWORD;
-      if (!found || password !== expected) {
+      // Trimmed: pasted or autofilled values often carry stray whitespace.
+      if (!found || password.trim() !== expected.trim()) {
         return { ok: false, reason: "invalid" };
       }
       window.localStorage.setItem(STORAGE_KEY, found.id);

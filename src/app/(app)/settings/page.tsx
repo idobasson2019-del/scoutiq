@@ -36,12 +36,14 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const changePassword = () => {
-    if (!newPassword) return;
-    if (newPassword !== confirmPassword) {
+    // Trimmed so a stray space from a paste can't lock the account out.
+    const next = newPassword.trim();
+    if (!next) return;
+    if (next !== confirmPassword.trim()) {
       toast(t("settings.passwordMismatch"), "error");
       return;
     }
-    if (user) updateUser(user.id, { password: newPassword });
+    if (user) updateUser(user.id, { password: next });
     setNewPassword("");
     setConfirmPassword("");
     toast(t("settings.passwordChanged"));
