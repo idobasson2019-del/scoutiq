@@ -34,7 +34,7 @@ import { useReports } from "@/lib/reports-store";
 import { AddPlayerDialog } from "@/components/players/add-player-dialog";
 import { WriteReportDialog } from "@/components/players/write-report-dialog";
 import { EditStatsDialog } from "@/components/players/edit-stats-dialog";
-import { withStatDefaults } from "@/lib/stats";
+import { withStatDefaults, statFieldsFor, isGoalkeeper } from "@/lib/stats";
 import { AddVideoDialog, youTubeId } from "@/components/players/add-video-dialog";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import {
@@ -90,6 +90,8 @@ export default function PlayerProfilePage() {
   const defaultTab = params.get("tab") ?? "overview";
   // Fill in any stat a player saved earlier might be missing.
   const stats = withStatDefaults(player.stats);
+  // Goalkeepers get their own set of stats — see lib/stats.ts.
+  const statFields = statFieldsFor(player.position);
 
   const addNote = () => {
     if (!noteText.trim()) return;
@@ -237,7 +239,10 @@ export default function PlayerProfilePage() {
             <CardHeader className="flex-row items-start justify-between">
               <div>
                 <CardTitle>{t("stat.season")}</CardTitle>
-                <p className="text-sm text-muted-foreground">{player.currentTeam} · {player.league}</p>
+                <p className="text-sm text-muted-foreground">
+                  {player.currentTeam} · {player.league}
+                  {isGoalkeeper(player.position) && ` · ${t("stat.gkNote")}`}
+                </p>
               </div>
               {isAdmin && (
                 <Button variant="outline" size="sm" onClick={() => setStatsOpen(true)}>
@@ -247,16 +252,18 @@ export default function PlayerProfilePage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                <Stat label={t("stat.goals")} value={stats.goals} />
-                <Stat label={t("stat.assists")} value={stats.assists} />
-                <Stat label={t("stat.appearances")} value={stats.appearances} />
-                <Stat label={t("stat.minutes")} value={stats.minutes} />
-                <Stat label={t("stat.yellowCards")} value={stats.yellowCards} accent="warning" />
-                <Stat label={t("stat.redCards")} value={stats.redCards} accent="destructive" />
+                {statFields
+                  .filter((f) => f.kind === "count")
+                  .map((f) => (
+                    <Stat key={f.key} label={t(f.labelKey)} value={stats[f.key]} accent={f.accent} />
+                  ))}
               </div>
               <div className="grid gap-x-8 gap-y-4 border-t border-border pt-5 sm:grid-cols-2">
-                <StatBar label={t("stat.passAccuracy")} value={stats.passAccuracy} />
-                <StatBar label={t("stat.defensiveRating")} value={stats.defensiveRating} />
+                {statFields
+                  .filter((f) => f.kind === "rating")
+                  .map((f) => (
+                    <StatBar key={f.key} label={t(f.labelKey)} value={stats[f.key]} />
+                  ))}
               </div>
             </CardContent>
           </Card>

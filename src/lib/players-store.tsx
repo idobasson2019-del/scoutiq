@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Player } from "@/types";
 import { players as seedPlayers } from "@/data/players";
+import { EMPTY_STATS } from "@/lib/stats";
 
 const STORAGE_KEY = "scoutiq.players";
 
@@ -87,16 +88,7 @@ function buildPlayer(input: NewPlayerInput): Player {
     teamIds: input.teamId ? [input.teamId] : [],
     potential: input.potential,
     risk: input.risk,
-    stats: {
-      appearances: 0,
-      minutes: 0,
-      goals: 0,
-      assists: 0,
-      passAccuracy: 0,
-      yellowCards: 0,
-      redCards: 0,
-      defensiveRating: 0,
-    },
+    stats: { ...EMPTY_STATS },
   };
 }
 

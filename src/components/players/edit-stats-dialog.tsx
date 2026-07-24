@@ -14,22 +14,8 @@ import { Label } from "@/components/ui/label";
 import { useI18n } from "@/lib/i18n";
 import { useToast } from "@/components/ui/toast";
 import { usePlayers } from "@/lib/players-store";
-import { EMPTY_STATS } from "@/lib/stats";
+import { EMPTY_STATS, statFieldsFor, isGoalkeeper } from "@/lib/stats";
 import type { Player, PlayerStats } from "@/types";
-
-const COUNTS: { key: keyof PlayerStats; labelKey: string }[] = [
-  { key: "goals", labelKey: "stat.goals" },
-  { key: "assists", labelKey: "stat.assists" },
-  { key: "appearances", labelKey: "stat.appearances" },
-  { key: "minutes", labelKey: "stat.minutes" },
-  { key: "yellowCards", labelKey: "stat.yellowCards" },
-  { key: "redCards", labelKey: "stat.redCards" },
-];
-
-const RATINGS: { key: keyof PlayerStats; labelKey: string }[] = [
-  { key: "passAccuracy", labelKey: "stat.passAccuracy" },
-  { key: "defensiveRating", labelKey: "stat.defensiveRating" },
-];
 
 export function EditStatsDialog({
   open,
@@ -44,6 +30,11 @@ export function EditStatsDialog({
   const { toast } = useToast();
   const { updatePlayer } = usePlayers();
   const [stats, setStats] = useState<PlayerStats>(EMPTY_STATS);
+
+  // A goalkeeper is measured on clean sheets and saves, not goals and assists.
+  const fields = statFieldsFor(player.position);
+  const counts = fields.filter((f) => f.kind === "count");
+  const ratings = fields.filter((f) => f.kind === "rating");
 
   useEffect(() => {
     // Merge over defaults so players saved before a field existed still load.
@@ -64,11 +55,18 @@ export function EditStatsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] max-w-xl overflow-y-auto scrollbar-thin">
         <DialogHeader>
-          <DialogTitle>{t("stats.editTitle")} — {player.name}</DialogTitle>
+          <DialogTitle>
+            {t("stats.editTitle")} — {player.name}
+            {isGoalkeeper(player.position) && (
+              <span className="ms-2 text-sm font-normal text-muted-foreground">
+                {t("stat.gkNote")}
+              </span>
+            )}
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={submit} className="space-y-5">
           <div className="grid gap-4 sm:grid-cols-3">
-            {COUNTS.map((f) => (
+            {counts.map((f) => (
               <div key={f.key} className="space-y-1.5">
                 <Label className="text-xs">{t(f.labelKey)}</Label>
                 <Input
@@ -86,7 +84,7 @@ export function EditStatsDialog({
               {t("stat.rated")}
             </h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              {RATINGS.map((f) => (
+              {ratings.map((f) => (
                 <div key={f.key} className="space-y-1.5">
                   <Label className="text-xs">{t(f.labelKey)}</Label>
                   <Input

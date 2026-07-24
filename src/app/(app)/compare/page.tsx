@@ -20,7 +20,7 @@ import { useI18n } from "@/lib/i18n";
 import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth";
 import { usePlayers, scopePlayers } from "@/lib/players-store";
-import { withStatDefaults } from "@/lib/stats";
+import { withStatDefaults, statFieldsFor, isGoalkeeper } from "@/lib/stats";
 import { reportForPlayer } from "@/data/reports";
 import { label, positionLabels, footLabels } from "@/lib/i18n/labels";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
@@ -54,6 +54,8 @@ export default function ComparePage() {
 
   const addable = pool.filter((p) => !selected.includes(p.id));
 
+  const allGoalkeepers = players.length > 0 && players.every((p) => isGoalkeeper(p.position));
+
   const add = (id: string) => {
     if (selected.length >= 4) {
       toast(t("compare.max"), "info");
@@ -72,16 +74,16 @@ export default function ComparePage() {
       { label: t("col.marketValue"), get: (p) => formatCurrency(p.marketValue, "EUR", lang), dir: "none" },
       { label: t("profile.salaryEst"), get: (p) => `${formatCurrency(p.salary, "EUR", lang)}`, dir: "none" },
       { label: t("profile.contractEnd"), get: (p) => formatDate(p.contractEnd, lang), dir: "none" },
-      { label: t("stat.goals"), get: (p) => `${st(p).goals}`, raw: (p) => st(p).goals, dir: "high" },
-      { label: t("stat.assists"), get: (p) => `${st(p).assists}`, raw: (p) => st(p).assists, dir: "high" },
-      { label: t("stat.appearances"), get: (p) => `${st(p).appearances}`, raw: (p) => st(p).appearances, dir: "high" },
-      { label: t("stat.minutes"), get: (p) => `${st(p).minutes}`, raw: (p) => st(p).minutes, dir: "high" },
-      { label: t("stat.yellowCards"), get: (p) => `${st(p).yellowCards}`, raw: (p) => st(p).yellowCards, dir: "low" },
-      { label: t("stat.redCards"), get: (p) => `${st(p).redCards}`, raw: (p) => st(p).redCards, dir: "low" },
-      { label: t("stat.passAccuracy"), get: (p) => `${st(p).passAccuracy}`, raw: (p) => st(p).passAccuracy, dir: "high" },
-      { label: t("stat.defensiveRating"), get: (p) => `${st(p).defensiveRating}`, raw: (p) => st(p).defensiveRating, dir: "high" },
+      // Goalkeeper rows only when every selected player is one — mixing the two
+      // sets in a single table would compare goals against clean sheets.
+      ...statFieldsFor(allGoalkeepers ? "GK" : undefined).map<Metric>((f) => ({
+        label: t(f.labelKey),
+        get: (p) => `${st(p)[f.key]}`,
+        raw: (p) => st(p)[f.key],
+        dir: f.better ?? "high",
+      })),
     ],
-    [t, lang],
+    [t, lang, allGoalkeepers],
   );
 
   const leaderIndex = (m: Metric): number => {
